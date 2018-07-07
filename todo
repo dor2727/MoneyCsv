@@ -1,0 +1,7 @@
+[ ] add "fuel" category
+[ ] add sublime syntax
+	date        - YYYY/MM/DD         - some color
+	amount      - int OR float.float - purple?
+	subject     - Food OR Other ...  - Blue?
+	description - string             - yellow?
+	syntax check - if less than 3 ',' - syntax error
