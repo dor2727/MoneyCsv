@@ -183,7 +183,8 @@ class friends(DataPlotter):
 class money(TypePlotter):
 	def _summarize(self, data, titles, salary, time_representation, amount_of_days):
 		return (
-			[sum(j.amount for j in i) for i in data],
+			# minus is for converting deposits into absolute value, where negative means savings
+			[-sum(j.amount for j in i) for i in data],
 			titles,
 			data,
 			salary,
@@ -209,8 +210,7 @@ class transactions(TypePlotter):
 class bar(VisualPlotter):
 	def _plot(self, data, titles, raw_data, salary, time_representation, amount_of_days, *args, **kwargs):
 		utils.plot.bar(
-			# minus is for converting deposits into absolute value, where negative means savings
-			[-x for x in data], # data
+			data,
 			titles, # names
 			title=kwargs["title"]
 		)
@@ -242,6 +242,7 @@ class text(VisualPlotter):
 		)
 
 	def _plot(self, data, titles, raw_data, salary, time_representation, amount_of_days, *args, **kwargs):
+		import pdb; pdb.set_trace()
 		money, transactions = data
 		total_money        = sum(money)
 		total_transactions = sum(transactions)

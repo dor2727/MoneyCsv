@@ -7,31 +7,8 @@ import utils
 import calendar
 import datetime
 
-import plotters
-
-DEFAULT_DATA_DIRECTORY = os.path.expanduser("~/Projects/Money/data")
-
-# 01/01/01 is Monday
-DAYS = [datetime.datetime(1,1,i).strftime("%a") for i in range(1,7+1)]
-# headers to look for in every csv
-BASE_HEADERS = ["Date", "Amount", "Subject", "Description"]
-# how to format [from_day - to_day]
-DATE_REPRESENTATION_PATTERN = "%04d/%02d/%02d - %04d/%02d/%02d"
-
-
-# pattern_with = "(?<=with )(.*?)(?=\\s[@\\(]|$)"
-# a name starts with a capital letter
-#    I write full names without spaces
-_cappital_word = "[A-Z][A-Za-z]*"
-# names list is
-#     Name Name Name and Name
-#     which is - at least one
-#         where the last one (if there is more than one) follows "and"
-#         and any name which is not the first nor the last has space before and after itself
-_names_list  = "((%s)( %s)*( and %s)*)" % (tuple([_cappital_word])*3)
-pattern_with = re.compile("(?<=with )" + _names_list)
-pattern_for  = re.compile("(?<=for )"  + _names_list)
-
+import Money.plotters as plotters
+from Money.consts import *
 
 class DataPlotter(object):
 	def __init__(self, money, name):
@@ -116,6 +93,9 @@ class Plotter(object):
 
 class Data(object):
 	def __init__(self, items, headers, parsers):
+		if self._check_if_comment(items):
+			return
+
 		self._items = []
 		for i in range(len(headers)):
 			self._items.append(
@@ -139,35 +119,51 @@ class Data(object):
 			x.description
 		)
 
+	def _check_if_comment(self, items):
+		if items[0][0] == '#':
+			self.is_comment = True
+			return True
+		else:
+			self.is_comment = False
+			return False
+
 	@property
-	def friends(self):
+	def friends(self, raw=False):
 		# get all from the patterns
 		found = (
-			pattern_with.findall(self.description)
+			PATTERN_WITH.findall(self.description)
 			 +
-			pattern_for .findall(self.description)
+			PATTERN_FOR .findall(self.description)
 		)
-		# join all results into one string
-		found = ' '.join(i[0] for i in found)
+
+		if raw:
+			return found
+		else:
+			# join all results into one string
+			found = ' '.join(i[0] for i in found)
 		
-		return found.replace("and", "").split()
+			return found.replace("and", "").split()
 
 
 class Money(object):
 	def __init__(self, path=None):
-		self.load_data(path or self.file_path)
-		self.create_titles()
-		self.create_friends_list()
+		self._load_data(path or self.file_path)
+		self._create_titles()
+		self._create_friends_list()
 
 		# self.plot = Plotter(self, "_plot")
 		self.plot = plotters.Plot(get_data=self.get_data)
 	
 	@property
 	def file_path(self):
-		return os.path.join(DEFAULT_DATA_DIRECTORY, self.__class__.__name__ + ".csv")
-	
+		path_without_extension = os.path.join(DEFAULT_DATA_DIRECTORY, self.__class__.__name__)
+		for e in POSSIBLE_FILE_EXTENSIONS:
+			if os.path.exists(path_without_extension + e):
+				return path_without_extension + e
+		else:
+			raise OSError("file not found (%s)" % path_without_extension)
 
-	def load_data(self, path):
+	def _load_data(self, path):
 		r = csv.reader(
 			open(
 				os.path.expandvars(
@@ -179,21 +175,26 @@ class Money(object):
 			# open(path)
 		)
 		self.headers = next(r)
-		# self.data = list(r)
-		self.data = list(map(
-			lambda x: Data(x, self.headers, self.PARSERS),
-			r
+		self.data = list(filter(
+			# filter out comment lines
+			lambda x: not x.is_comment,
+			map(
+				# parse each line
+				lambda x: Data(x, self.headers, self.PARSERS),
+				r
+			)
 		))
 
-	def create_titles(self):
+	def _create_titles(self):
+		# iterate every item in the data, collect its subject into a unique list
 		self.titles = list(set(i.subject for i in self.data))
 
 		self.titles_without_salary = self.titles[:]
 		if "Salary" in self.titles_without_salary:
 			self.titles_without_salary.remove("Salary")
 
-	def create_friends_list(self):
-		# pattern_with = "(?<=with )(.*?)(?=\\s[@\\(]|$)"
+	def _create_friends_list(self):
+		# PATTERN_WITH = "(?<=with )(.*?)(?=\\s[@\\(]|$)"
 		# a name starts with a capital letter
 		#    I write full names without spaces
 		_cappital_word = "[A-Z][A-Za-z]*"
@@ -203,20 +204,27 @@ class Money(object):
 		#         where the last one (if there is more than one) follows "and"
 		#         and any name which is not the first nor the last has space before and after itself
 		_names_list  = "((%s)( %s)*( and %s)*)" % (tuple([_cappital_word])*3)
-		pattern_with = "(?<=with )" + _names_list
-		pattern_for  = "(?<=for )"  + _names_list
+		PATTERN_WITH = "(?<=with )" + _names_list
+		PATTERN_FOR  = "(?<=for )"  + _names_list
 		descriptions = '\n'.join(i.description for i in self.data)
 
-		all_friends_raw = [i[0] for i in re.findall(pattern_with, descriptions)] \
-						+ [i[0] for i in re.findall(pattern_for , descriptions)]
+		all_friends_raw = [i[0] for i in re.findall(PATTERN_WITH, descriptions)] \
+						+ [i[0] for i in re.findall(PATTERN_FOR , descriptions)]
 		self._friends_unsorted = '\n'.join(all_friends_raw).replace("and", "").split()
 
 		self.friends_histogram = utils.counter(self._friends_unsorted)
-		self.friends_histogram.sort(key=lambda x:-x[1])
+		# counter object is a list of tuples (name, amount)
+		self.friends_histogram.sort(key=lambda x:x[1], reverse=True)
 
 		self.friends = [i[0] for i in self.friends_histogram]
 
 	def get_data(self, year=None, month=None, bank_month=True):
+		"""
+		select a year and a month
+		you can select a year and leave month to be None - this will collect the whole year
+		you can leave both year and month to be None - this will collect the whole data
+		selecting a full year or the whole time does not support bank_month
+		"""
 		if not month:
 			if not year:
 				selected_time = "All times"
@@ -269,7 +277,6 @@ class Money(object):
 		items_without_salary = list(filter( lambda x: x.subject != "Salary", items ))
 		salary               = list(filter( lambda x: x.subject == "Salary", items ))
 
-		# time_representation = "%-21s (%s) (%d days)" % (
 		time_representation = "%s (%s) (%d days)" % (
 			selected_time,
 			days_representation,
@@ -462,6 +469,10 @@ class Cash(Money):
 	]
 
 class Combined(Money):
+	"""
+	A class which gets Money classes as parameters and creates a combined object
+	containing all their data, combined
+	"""
 	def __init__(self, *preloaded_data):
 		self.headers = BASE_HEADERS[:]
 		self.data = []
@@ -475,8 +486,9 @@ class Combined(Money):
 			transposed_data = list(zip(*d.data))
 			# get wanted columns and transpose back
 			self.data += list(zip(*[transformed_data[i] for i in wanted_headers]))
-		self.create_titles()
-		self.create_friends_list()
+
+		self._create_titles()
+		self._create_friends_list()
 
 
 if __name__ == '__main__':
