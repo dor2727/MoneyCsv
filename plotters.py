@@ -6,6 +6,19 @@ from collections import defaultdict
 ### utils
 ###########################
 def load_types(obj, exclude=[], *args):
+	"""
+	iterate every object
+	search for plotters
+	exclude plotters according to the excludion list
+
+	try calling the "mro" method (which is available to classes, so there
+		is a fail-safe of a lambda function to return the same type of
+		return value as the mro method)
+	search only in the second or later item in the list ("[1:]")
+		to exclude the type itself
+
+	use setattr to dynamically add the wanted plotter to the object
+	"""
 	g = globals()
 	for k,v in g.items():
 		for t in [DataPlotter, TypePlotter, VisualPlotter]:
@@ -14,6 +27,9 @@ def load_types(obj, exclude=[], *args):
 					setattr(obj, k, v(obj, *args))
 
 def load_methods(obj, callers):
+	"""
+	dynamically inherit all the methods from the previous callers
+	"""
 	for caller in callers:
 		for i in dir(caller):
 			if i[0] == '_' and i[1] != '_' and i != "_exclude":
@@ -31,6 +47,8 @@ class Plot(object):
 		if caller is None:
 			self._exclude = []
 		else:
+			# add the "father class" of the current class to the exclution list
+			# so that all the other similar plotters will be excluded
 			self._exclude = caller._exclude + [self.__class__.mro()[1]]
 
 		if get_data is not None:
