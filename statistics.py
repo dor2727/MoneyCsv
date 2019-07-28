@@ -119,6 +119,9 @@ class Data(object):
 			x.description
 		)
 
+	def __int__(self):
+		return self.amount
+
 	def _check_if_comment(self, items):
 		if items[0][0] == '#':
 			self.is_comment = True
@@ -285,7 +288,7 @@ class Money(object):
 
 		return items_without_salary, salary, time_representation, amount_of_days
 
-	def stats(self, amount):
+	def stats(self, amount=None):
 		# get month list
 		months = list(set((i[0].year, i[0].month) for i in self.data))
 		months.sort(key=lambda x: x[0]*12 + x[1], reverse=True)
