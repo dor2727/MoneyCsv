@@ -4,7 +4,7 @@ import datetime
 
 DEFAULT_DATA_DIRECTORY = os.path.expanduser("~/Dropbox/Projects/MoneyCsv/data")
 TELEGRAM_DATA_DIRECTORY = os.path.expanduser("~/Dropbox/Projects/MoneyCsv/Telegram_Bot/data")
-POSSIBLE_FILE_EXTENSIONS = [".mcsv", ".csv", ".txt", ""]
+POSSIBLE_FILE_EXTENSIONS = ["", ".mcsv", ".csv", ".txt"]
 
 
 DATE_FORMAT = "%Y/%m/%d"

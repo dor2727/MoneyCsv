@@ -268,9 +268,9 @@ class DataItem_with_discount(DataItem):
 
 
 class DataFile(object):
-	def __init__(self, path=None, data_item_class=DataItem, name=None):
-		self._path = path or self.file_path
-		self._name = name
+	def __init__(self, file_path=None, data_item_class=DataItem, name=None):
+		self._path = self.get_file_path(file_path)
+		self._name = name or os.path.basename(file_path).capitalize()
 		self._data_item_class = data_item_class
 		self.reload()
 
@@ -293,14 +293,26 @@ class DataFile(object):
 		self._create_friends_list()
 		self._create_locations_list()
 
-	@property
-	def file_path(self):
-		path_without_extension = os.path.join(DEFAULT_DATA_DIRECTORY, self.__class__.__name__)
+	def get_file_path(self, file_path):
+		# first, check in the main folder:
+		full_file_path = os.path.join(
+			DEFAULT_DATA_DIRECTORY,
+			os.path.basename(file_path)
+		)
 		for e in POSSIBLE_FILE_EXTENSIONS:
-			if os.path.exists(path_without_extension + e):
-				return path_without_extension + e
-		else:
-			raise OSError("file not found (%s)" % path_without_extension)
+			if os.path.exists(full_file_path + e):
+				return full_file_path + e
+
+		# else, check if its an absolute path
+		if os.path.exists(file_path):
+			return file_path
+
+		# check if its an absolute path, or, if its a relative path that exists
+		for e in POSSIBLE_FILE_EXTENSIONS:
+			if os.path.exists(file_path + e):
+				return file_path + e
+
+		raise OSError("file not found (%s)" % file_path)
 
 	def _load_data(self, path):
 		r = csv.reader(
