@@ -185,7 +185,7 @@ class DataItem(object):
 			if self.date == COPY_LAST_DATE:
 				self.date = prev.date
 			elif self.date == ADD_LAST_DATE:
-				self.date = prev.date + datetime.timedelta(days=365)
+				self.date = prev.date + datetime.timedelta(days=1)
 	@property	
 	def is_fully_parsed(self):
 		"""

@@ -37,6 +37,10 @@ DEFAULT_PIE_PATH = "/tmp/pie.png"
 DEFAULT_BAR_PATH = "/tmp/bar.png"
 
 
+DATE_REPRESENTATION_PATTERN = "%04d/%02d/%02d - %04d/%02d/%02d"
+
+
+# False means monday
 WEEK_STARTS_AT_SUNDAY = True
 
 
