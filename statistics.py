@@ -123,12 +123,15 @@ class Data(object):
 		return self.amount
 
 	def _check_if_comment(self, items):
-		if items[0][0] == '#':
+		if not items:
+			# if items is an empty list - [] - then the line is empty
 			self.is_comment = True
-			return True
+		elif items[0][0] == '#':
+			self.is_comment = True
 		else:
 			self.is_comment = False
-			return False
+
+		return self.is_comment
 
 	@property
 	def friends(self, raw=False):

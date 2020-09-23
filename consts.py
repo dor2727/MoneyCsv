@@ -2,7 +2,7 @@ import os
 import re
 import datetime
 
-DEFAULT_DATA_DIRECTORY = os.path.expanduser("~/Projects/Money/data")
+DEFAULT_DATA_DIRECTORY = os.path.expanduser("~/Dropbox/Projects/Money/data")
 POSSIBLE_FILE_EXTENSIONS = [".mcsv", ".csv", ".txt", ""]
 
 # 01/01/01 is Monday
