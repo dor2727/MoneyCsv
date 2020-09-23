@@ -548,3 +548,29 @@ class TimeFilter_DateRange(TimeFilter):
 		start = self.start_time.strftime("%Y/%m/%d")
 		stop = self.stop_time.strftime("%Y/%m/%d")
 		return f"daterange ({start} --> {stop})"
+
+
+
+def join_filters_with_or(l):
+	# check if list is empty
+	l = list(filter(bool, l))
+	if not l:
+		return None
+
+	f = l[0]
+	for i in l[1:]:
+		f |= i
+
+	return f
+
+def join_filters_with_and(l):
+	l = list(filter(bool, l))
+	# check if list is empty
+	if not l:
+		return None
+
+	f = l[0]
+	for i in l[1:]:
+		f &= i
+
+	return f

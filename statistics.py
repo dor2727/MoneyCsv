@@ -112,11 +112,11 @@ class FilteredStats(Stats):
 			money_percentage = 0
 		else:
 			days = (self.data[-1].date - self.data[0].date).days + 1
-			transactions_per_day = amount_of_items / days
+			transactions_per_day = amount_of_transactions / days
 
 			money_percentage = amount_of_money / amount_of_money
 
-		if amount_of_items == 0:
+		if amount_of_transactions == 0:
 			transaction_average = 0
 		else:
 			transaction_average = amount_of_money / amount_of_transactions
@@ -140,7 +140,7 @@ class FilteredStats(Stats):
 		s += "\n"
 		s += f"  transactions per day = {stats['transactions_per_day']:.2f}"
 		s += "\n"
-		s += "(%3d) : %9.2f (%5.2f%%) ; item average %9.2f" % (
+		s += "    (%3d) : %9.2f (%6.2f%%) ; item average %9.2f" % (
 			stats["amount_of_transactions"],
 			stats["amount_of_money"],
 			stats["money_percentage"],
@@ -149,12 +149,6 @@ class FilteredStats(Stats):
 
 		return s
 
-"""
-TODO
-add a flag: "sort_by_value"
-if true: sort the result of self.group by the values, and show the top values first
-else: sort alphabetically or whatever
-"""
 class GroupedStats(Stats):
 	_allowed_group_values = ("money", "money_average", "transactions")
 	_allowed_sorting_methods = ("alphabetically", "by_value")
@@ -235,8 +229,11 @@ class GroupedStats(Stats):
 			# sort by header (str), alphabetically
 			sorted_z = sorted(z, key=lambda i: i[0])
 		elif self._sorting_method == "by_value":
-			# sort by value, highest first
-			sorted_z = sorted(z, key=lambda i: i[1], reverse=False)
+			# money is a negative number (unless its an income)
+			if "money" in self.group_value:
+				sorted_z = sorted(z, key=lambda i: i[1], reverse=False)
+			else:
+				sorted_z = sorted(z, key=lambda i: i[1], reverse=True)
 		else:
 			raise ValueError("invalid sorting_method")
 		# unpack the zip into headers and values
@@ -369,7 +366,7 @@ class GroupedStats(Stats):
 
 		stats["money_percentage"] = 100.0 * stats["amount_of_money"] / amount_of_money
 
-		return "    %-14s (%4d) : %9.2f (%5.2f%%) ; transaction average %9.2f" % (
+		return "    %-14s (%4d) : %9.2f (%6.2f%%) ; transaction average %9.2f" % (
 			(header_format % header),
 			stats["amount_of_transactions"],
 			stats["amount_of_money"],
@@ -437,9 +434,8 @@ class GroupedStats_Friend(GroupedStats):
 		headers = set()
 		for i in self.data:
 			h = i.friends
-			if not h:
-				print("empty description for: %s" % i)
-			headers.add(h)
+			for f in h:
+				headers.add(f)
 
 		# return a list, sorted alphabetically
 		self._headers = sorted(headers)
