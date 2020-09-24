@@ -288,12 +288,13 @@ class GroupedStats(Stats):
 			return f"{value:.2f}%"
 
 		# making the pie chart
-		ax.pie(values, labels=headers, autopct=pct)
+		ax.pie(np.abs(values), labels=headers, autopct=pct)
 		ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
 		# titles & labels
 		ax.set_title(title)
 		fig.canvas.set_window_title(title)
+		ax.legend()
 
 		# plotting - save to file
 		if save:
@@ -373,6 +374,19 @@ class GroupedStats(Stats):
 			stats["money_percentage"],
 			stats["transaction_average"],
 		)
+	def _generate_to_telegram_statistics_per_header(self, header, header_format, amount_of_money):
+		self._get_value_of_header(header)
+		stats = self.values_dict[header]
+
+		stats["money_percentage"] = 100.0 * stats["amount_of_money"] / amount_of_money
+
+		return "    %-14s\n        (%4d) : %9.2f (%6.2f%%) ; avg %9.2f" % (
+			(header_format % header),
+			stats["amount_of_transactions"],
+			stats["amount_of_money"],
+			stats["money_percentage"],
+			stats["transaction_average"],
+		)
 
 	def _generate_to_text_footer(self, header_format, amount_of_transactions, amount_of_money):
 		s  = "    " + '-'*57
@@ -391,7 +405,7 @@ class GroupedStats(Stats):
 
 		return s
 
-	def to_text(self):
+	def _generate_text(self, header, statistics_per_header, footer):
 		"""
 		TODO
 		and create a wrapper
@@ -411,7 +425,7 @@ class GroupedStats(Stats):
 			amount_of_days = (self.data[-1].date - self.data[0].date).days + 1
 			transactions_per_day = amount_of_transactions / amount_of_days
 
-		s = self._generate_to_text_header(transactions_per_day)
+		s = header(transactions_per_day)
 
 		if not amount_of_transactions:
 			s += "\n    No items found :("
@@ -421,12 +435,26 @@ class GroupedStats(Stats):
 		header_format = "%%-%ds" % (max(map(len, self.headers), default=1) + 1)
 		for h in self.headers:
 			s += "\n"
-			s += self._generate_to_text_statistics_per_header(h, header_format, amount_of_money)
+			s += statistics_per_header(h, header_format, amount_of_money)
 
 		s += "\n"
-		s += self._generate_to_text_footer(header_format, amount_of_transactions, amount_of_money)
+		s += footer(header_format, amount_of_transactions, amount_of_money)
 
 		return s
+
+	def to_text(self):
+		return self._generate_text(
+			self._generate_to_text_header,
+			self._generate_to_text_statistics_per_header,
+			self._generate_to_text_footer
+		)
+
+	def to_telegram(self):
+		return self._generate_text(
+			self._generate_to_text_header,
+			self._generate_to_telegram_statistics_per_header,
+			self._generate_to_text_footer
+		)
 
 class GroupedStats_Friend(GroupedStats):
 	def _get_headers(self):
