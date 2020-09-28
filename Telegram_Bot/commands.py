@@ -152,8 +152,6 @@ class TelegramCommands(object):
 					self.chat_id()
 				)
 
-				self.send_text(f"command_month error: {e} ; args = {context.args}", self.chat_id())
-
 		# fill default values, if needed
 		for i in range(len(result), len(expected_types)):
 			result.append(expected_types[i]())
