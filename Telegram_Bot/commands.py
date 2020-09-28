@@ -146,6 +146,12 @@ class TelegramCommands(object):
 				for i in range(len(context.args)):
 					result.append(expected_types[i](context.args[i]))
 			except Exception as e:
+				self.send_text(
+					f"parse_args error: {e} ; args = {context.args}",
+					# send it to me, not to the user (avoiding information disclosure)
+					self.chat_id()
+				)
+
 				self.send_text(f"command_month error: {e} ; args = {context.args}", self.chat_id())
 
 		# fill default values, if needed
@@ -192,7 +198,10 @@ class TelegramCommands(object):
 		# if update is None - we are called from the scheduler
 		# only answer the user if the user asks the reload
 		if update is not None:
-			self.send_text("reload - done", update)
+			self.send_text(
+				"reload - done",
+				self.chat_id(update)
+			)
 
 
 	#
@@ -221,8 +230,8 @@ class TelegramCommands(object):
 	@whitelisted_command
 	@log_command
 	def command_month(self, update=None, context=None):
-		month, = self.parse_args(context, int)
-		self.filtered_time_command(TimeFilter_Month(month), update)
+		month, year = self.parse_args(context, int, int)
+		self.filtered_time_command(TimeFilter_Month(month, year), update)
 
 	@whitelisted_command
 	@log_command
@@ -280,7 +289,10 @@ class TelegramCommands(object):
 
 		pie_file = g.to_pie()
 
-		self.send_image(pie_file, self.chat_id(update))
+		self.send_image(
+			pie_file,
+			self.chat_id(update)
+		)
 
 	@whitelisted_command
 	@log_command
@@ -290,8 +302,8 @@ class TelegramCommands(object):
 	@whitelisted_command
 	@log_command
 	def command_pie_month(self, update=None, context=None):
-		month, = self.parse_args(context, int)
-		self.pie_command(GroupedStats_Subject, TimeFilter_Month(month), update)
+		month, year = self.parse_args(context, int, int)
+		self.pie_command(GroupedStats_Subject, TimeFilter_Month(month, year), update)
 
 	@whitelisted_command
 	@log_command
