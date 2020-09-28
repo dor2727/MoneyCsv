@@ -258,8 +258,8 @@ class TelegramCommands(object):
 	@whitelisted_command
 	@log_command
 	def command_month(self, update=None, context=None):
-		month, = self.parse_args(context, int)
-		self.filtered_time_command(TimeFilter_Month(month), update)
+		month, year = self.parse_args(context, int, int)
+		self.filtered_time_command(TimeFilter_Month(month, year), update)
 
 	@whitelisted_command
 	@log_command
@@ -330,8 +330,8 @@ class TelegramCommands(object):
 	@whitelisted_command
 	@log_command
 	def command_pie_month(self, update=None, context=None):
-		month, = self.parse_args(context, int)
-		self.pie_command(GroupedStats_Subject, TimeFilter_Month(month), update)
+		month, year = self.parse_args(context, int, int)
+		self.pie_command(GroupedStats_Subject, TimeFilter_Month(month, year), update)
 
 	@whitelisted_command
 	@log_command
