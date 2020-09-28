@@ -5,3 +5,8 @@ data
 
 .backup
 
+Telegram_Bot/log.log
+
+daily_wget.log
+daily_wget.log.new
+
