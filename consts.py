@@ -5,6 +5,8 @@ import datetime
 DEFAULT_DATA_DIRECTORY = os.path.expanduser("~/Projects/MoneyCsv/data")
 TELEGRAM_DATA_DIRECTORY = os.path.expanduser("~/Projects/MoneyCsv/Telegram_Bot/data")
 POSSIBLE_FILE_EXTENSIONS = ["", ".mcsv", ".csv", ".txt"]
+DAILY_WGET_PATH = os.path.expanduser("~/Projects/MoneyCsv/daily_wget.sh")
+DAILY_WGET_LOG_PATH = os.path.expanduser("~/Projects/MoneyCsv/daily_wget.log.new")
 
 
 DATE_FORMAT = "%Y/%m/%d"

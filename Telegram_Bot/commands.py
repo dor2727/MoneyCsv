@@ -146,7 +146,11 @@ class TelegramCommands(object):
 				for i in range(len(context.args)):
 					result.append(expected_types[i](context.args[i]))
 			except Exception as e:
-				self.send_text(f"command_month error: {e} ; args = {context.args}", self.chat_id())
+				self.send_text(
+					f"command_month error: {e} ; args = {context.args}",
+					# send it to me, not to the user (avoiding information disclosure)
+					self.chat_id()
+				)
 
 		# fill default values, if needed
 		for i in range(len(result), len(expected_types)):
@@ -192,7 +196,33 @@ class TelegramCommands(object):
 		# if update is None - we are called from the scheduler
 		# only answer the user if the user asks the reload
 		if update is not None:
-			self.send_text("reload - done", update)
+			self.send_text(
+				"reload - done",
+				self.chat_id(update)
+			)
+
+	@whitelisted_command
+	@log_command
+	def command_wget(self, update=None, context=None):
+		log("update")
+		log(str(update))
+		log("context")
+		log(str(context))
+		os.system(DAILY_WGET_PATH)
+		log(f"    [w] wget : {time.asctime()}")
+
+		# if update is None - we are called from the scheduler
+		# only answer the user if the user asks the reload
+		if update is not None:
+			f = open(DAILY_WGET_LOG_PATH)
+			s = f.read()
+			f.close()
+			self.send_text("wget - done", update)
+			self.send_text(s, update)
+
+	def full_reload(self):
+		self.command_wget()
+		self.command_reload()
 
 
 	#
@@ -280,7 +310,10 @@ class TelegramCommands(object):
 
 		pie_file = g.to_pie()
 
-		self.send_image(pie_file, self.chat_id(update))
+		self.send_image(
+			pie_file,
+			self.chat_id(update)
+		)
 
 	@whitelisted_command
 	@log_command
@@ -314,7 +347,8 @@ class TelegramScheduledCommands(object):
 
 	def schedule_commands(self):
 		schedule.every().day.at("05:00").do(
-			self.command_reload,
+			self.full_reload,
+			# self.command_reload,
 			scheduled=True
 		)
 
