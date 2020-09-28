@@ -217,8 +217,15 @@ class TelegramCommands(object):
 			f = open(DAILY_WGET_LOG_PATH)
 			s = f.read()
 			f.close()
-			self.send_text("wget - done", update)
-			self.send_text(s, update)
+			if type(s) is str: # should be
+				s = "wget - done\n%s" % s
+			else: # bytes
+				s = "wget - done\n%s" % s.decode()
+
+			self.send_text(
+				s,
+				self.chat_id(update)
+			)
 
 	def full_reload(self):
 		self.command_wget()
