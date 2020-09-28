@@ -147,7 +147,7 @@ class TelegramCommands(object):
 					result.append(expected_types[i](context.args[i]))
 			except Exception as e:
 				self.send_text(
-					f"command_month error: {e} ; args = {context.args}",
+					f"parse_args error: {e} ; args = {context.args}",
 					# send it to me, not to the user (avoiding information disclosure)
 					self.chat_id()
 				)
