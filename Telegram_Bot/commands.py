@@ -319,10 +319,10 @@ class TelegramScheduledCommands(object):
 		)
 
 		# daily log
-		schedule.every().day.at("08:00").do(
-			self.command_yesterday,
-			scheduled=True
-		)
+		#schedule.every().day.at("08:00").do(
+		#	self.command_yesterday,
+		#	scheduled=True
+		#)
 
 		# weekly log
 		schedule.every().sunday.at("08:00").do(
