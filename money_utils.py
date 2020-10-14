@@ -53,6 +53,18 @@ def find_location_in_str(s):
 def counter(data):
         return list(Counter(data).items())
 
+def re_escape(x):
+	return ''.join(
+		(
+			'\\'+i
+			 if
+			i in re.sre_parse.SPECIAL_CHARS
+			 else
+			i
+		)
+		for i in x
+	)
+
 
 #
 # datetime utils
@@ -85,14 +97,27 @@ def print_items(l, ret=False):
 		print('\n'.join(i.__repr__() for i in l))
 
 
-def re_escape(x):
-	return ''.join(
-		(
-			'\\'+i
-			 if
-			i in re.sre_parse.SPECIAL_CHARS
-			 else
-			i
-		)
-		for i in x
-	)
+#
+# wget utils
+#
+def wget(log_func=print, update=None, context=None):
+	if update is None:
+		log_func("update = None")
+	else:
+		log_func("update")
+		log_func(str(update))
+
+	if context is None:
+		log_func("context = None")
+	else:
+		log_func("context")
+		log_func(str(context))
+
+	os.system(DAILY_WGET_PATH)
+	log_func(f"    [w] wget : {time.asctime()}")
+
+def get_wget_log():
+	handle = open(DAILY_WGET_LOG_PATH)
+	s = handle.read()
+	handle.close()
+	return s
