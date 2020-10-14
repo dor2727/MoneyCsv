@@ -12,6 +12,7 @@ from telegram.ext import Updater, InlineQueryHandler, CommandHandler
 from MoneyCsv.statistics import *
 from MoneyCsv.parsing import DataFile, DataFileList, DataItem_with_discount
 from MoneyCsv.consts import *
+from MoneyCsv.money_utils import read_file
 from MoneyCsv.filters import *
 from MoneyCsv.filters_special import *
 
@@ -21,12 +22,6 @@ CHAT_ID_FILEPATH = os.path.join(TELEGRAM_DATA_DIRECTORY, "chat_id")
 LOG_FILE = open(os.path.join(MAIN_FOLDER, "log.log"), "a")
 
 # utils
-def read_file(filename):
-	handle = open(filename)
-	data = handle.read().strip()
-	handle.close()
-	return data
-
 def log(s):
 	print(s)
 	LOG_FILE.write(s)

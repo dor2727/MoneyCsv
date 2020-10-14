@@ -7,6 +7,11 @@ from MoneyCsv.consts import *
 #
 # file utils
 #
+def read_file(filename):
+	handle = open(filename)
+	data = handle.read().strip()
+	handle.close()
+	return data
 
 # get the newsest file
 def newest(path=DEFAULT_DATA_DIRECTORY):
