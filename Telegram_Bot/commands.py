@@ -209,6 +209,10 @@ class TelegramCommands(object):
 				self.chat_id(update)
 			)
 
+		wget_only, = self.parse_args(context, int)
+		if not bool(wget_only):
+			self.command_reload(update, context)
+
 	def full_reload(self):
 		self.command_wget()
 		self.command_reload()
