@@ -341,8 +341,6 @@ class TelegramScheduledCommands(object):
 	def schedule_commands(self):
 		schedule.every().day.at("05:00").do(
 			self.full_reload,
-			# self.command_reload,
-			scheduled=True
 		)
 
 		# daily log
