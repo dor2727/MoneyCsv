@@ -370,8 +370,13 @@ class TelegramScheduledCommands(object):
 
 		def run_scheduler():
 			while True:
-				schedule.run_pending()
-				time.sleep(60*60*0.5)
+				try:
+					schedule.run_pending()
+					time.sleep(60*60*0.5)
+				except Exception as exc:
+					log(f"[!] Caught general error in run_scheduler - quitting")
+					log(exception_message())
+					raise exc
 
 		threading.Thread(target=run_scheduler).start()
 
@@ -399,8 +404,16 @@ def main():
 	now = datetime.datetime.now().strftime("%Y/%m/%d_%H:%M")
 	log(f"[*] Starting: {now}")
 
-	t = TelegramAPI()
-	t.loop()
+	while True:
+		try:
+			t = TelegramAPI()
+			t.loop()
+
+		except Exception as exc:
+			log(f"[!] Caught general error in main - quitting")
+			log(exception_message())
+			raise exc
+
 	LOG_FILE.close()
 
 if __name__ == '__main__':
