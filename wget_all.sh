@@ -9,9 +9,14 @@ TEMP_LOCATION=$FOLDER/data/_latest
 declare -a FileNameArray=(
 	"cash.csv"
 	"isracard.csv"
+	"isracard.weird.csv"
+	"italy_2019.mcsv"
+	"japan_2017.csv"
+	"japan_2017_details.csv"
 	"Transactions.csv"
 	"Visa_automat.csv"
 	"Visa.txt"
+	"Visa.weird.csv"
 )
 
 date > $LOG_NEW 2>&1
