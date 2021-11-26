@@ -2,11 +2,20 @@ import os
 import re
 import datetime
 
+#
+# Filesystem paths & extensions
+#
 DEFAULT_DATA_DIRECTORY = os.path.expanduser("~/Dropbox/Projects/MoneyCsv/data")
-TELEGRAM_DATA_DIRECTORY = os.path.expanduser("~/Dropbox/Projects/MoneyCsv/Telegram_Bot/data")
 POSSIBLE_FILE_EXTENSIONS = ["", ".mcsv", ".csv", ".txt"]
+TELEGRAM_DATA_DIRECTORY = os.path.expanduser("~/Dropbox/Projects/MoneyCsv/Telegram_Bot/data")
+# temporary files
+DEFAULT_PIE_PATH = "/tmp/pie.png"
+DEFAULT_BAR_PATH = "/tmp/bar.png"
 
 
+#
+# File format
+#
 DATE_FORMAT = "%Y/%m/%d"
 COPY_LAST_DATE = "----/--/--"
 ADD_LAST_DATE = "----/--/+1"
@@ -33,8 +42,6 @@ PATTERN_LOCATION = " ?@ ?(.*?) ?@"
 PATTERN_LOCATION_THEIR_PLACE = "@@"
 
 
-DEFAULT_PIE_PATH = "/tmp/pie.png"
-DEFAULT_BAR_PATH = "/tmp/bar.png"
 
 
 DATE_REPRESENTATION_PATTERN = "%04d/%02d/%02d - %04d/%02d/%02d"
