@@ -1,7 +1,11 @@
+# python files
 __pycache__
 *.pyc
 
+# personal data
 data
+Telegram_Bot/Data
+Logs
 Personal
 
 .backup
