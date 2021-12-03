@@ -85,6 +85,7 @@ class DataItem(DataItemParser):
 		else:
 			return NotImplemented
 
+	# Compares the amount of 2 DataItems
 	def __lt__(self, other):
 		return abs(self).__lt__(abs(other))
 	def __le__(self, other):
