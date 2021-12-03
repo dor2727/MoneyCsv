@@ -60,6 +60,13 @@ class FriendFilter(BaseContentFilter):
 			for i in data
 		]
 
+class CurrencyFilter(BaseContentFilter):
+	def filter(self, data):
+		return [
+			i.currency == self.string_to_find
+			for i in data
+		]
+
 # Filters whether there is a location set
 class HasLocationFilter(Filter):
 	def filter(self, data):

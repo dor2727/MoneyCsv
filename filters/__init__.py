@@ -1,6 +1,7 @@
 from MoneyCsv.filters.content_filters import DescriptionFilter      , \
 											 GroupFilter            , \
 											 FriendFilter           , \
+											 CurrencyFilter         , \
 											 HasLocationFilter      , \
 											 LocationFilter         , \
 											 HasExtraDetailsFilter  , \
