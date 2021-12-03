@@ -28,6 +28,10 @@ class Stats(object):
 		return sum(~SalaryFilter % self.data)
 
 	@property
+	def amount_of_salary(self):
+		return sum( SalaryFilter % self.data)
+
+	@property
 	def amount_of_days(self):
 		if self.data:
 			return (self.data[-1].date - self.data[0].date).days + 1
@@ -207,7 +211,7 @@ class DetailedStats(Stats):
 			sorted_z = sorted(z, key=lambda i: i[0])
 		# sort by value, highest first
 		elif self._sorting_method == "by_value":
-			sorted_z = sorted(z, key=lambda i: i[1], reverse=True)
+			sorted_z = sorted(z, key=lambda i: abs(i[1]), reverse=True)
 		else:
 			raise ValueError("invalid sorting_method")
 
@@ -371,14 +375,14 @@ class DetailedStats(Stats):
 			s += "\n"
 			s += text_per_item(t)
 
-		s += "\n"
-		s += footer()
-
 		if "Salary" in self._titles:
 			s += "\n"
 			s += "    " + '-'*50
 			s += "\n"
 			s += text_per_item("Salary")
+
+		s += "\n"
+		s += footer()
 
 		return s
 
@@ -412,6 +416,11 @@ class DetailedStats(Stats):
 			self.amount_of_transactions,
 			self.amount_of_money,
 		)
+
+		if "Salary" in self._titles:
+			s += " -> "
+			# Salary is positive, amount_of_money is negative
+			s += "Net total %.2f" % (self.amount_of_salary + self.amount_of_money)
 		return s
 
 	def _text_generate_item(self, title):
@@ -424,7 +433,7 @@ class DetailedStats(Stats):
 			amount_of_transactions,
 			(self._money_str_format % amount_of_money),
 			money_percentage,
-			average_money_per_transaction,
+			(self._money_str_format % average_money_per_transaction),
 		)
 
 	def _telegram_generate_item(self, title):
