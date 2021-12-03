@@ -1,9 +1,13 @@
 import datetime
 
 from MoneyCsv.consts import DEFAULT_DATA_DIRECTORY
-from MoneyCsv.filters import AutoFilter, \
-							 TimeFilter_None, TimeFilter_Days, TimeFilter_Month, TimeFilter_Year, \
-							 join_filters_with_or, join_filters_with_and
+from MoneyCsv.filters.generic_filters import AutoFilter
+from MoneyCsv.filters.time_filters    import TimeFilter_None    , \
+											 TimeFilter_Days    , \
+											 TimeFilter_Month   , \
+											 TimeFilter_Year
+from MoneyCsv.filters.filter_utils import 	 join_filters_with_or, \
+											 join_filters_with_and
 
 def initialize_search_filter(args):
 	filters = [
