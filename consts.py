@@ -6,7 +6,7 @@ import datetime
 # Filesystem paths & extensions
 #
 DEFAULT_DATA_DIRECTORY = os.path.expanduser("~/Dropbox/Projects/MoneyCsv/data/by_type")
-POSSIBLE_FILE_EXTENSIONS = ["", ".mcsv", ".csv", ".txt"]
+POSSIBLE_FILE_EXTENSIONS = [".mcsv", ".csv", ".txt", ""]
 # temporary files
 DEFAULT_PIE_PATH = "/tmp/pie.png"
 DEFAULT_BAR_PATH = "/tmp/bar.png"
