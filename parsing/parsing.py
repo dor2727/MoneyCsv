@@ -1,6 +1,7 @@
 import os
 import re
 import csv
+from itertools import chain
 
 from MoneyCsv.utils import *
 from MoneyCsv.parsing.consts import *
@@ -235,17 +236,15 @@ class DataFolder(object):
 
 		for folder_path, folders, files in os.walk(self._path):
 			for file_name in files:
-				# remove files starting with either '.' or '_':
-				if file_name[0] == '.' or file_name[0] == '_':
-					continue
-				if re.match(FILE_EXCLUDE_PATTERN, file_name):
-					continue
-
-				self.data_files.append(
-					DataFile(
-						os.path.join(folder_path, file_name)
+				if not any(chain(
+					(re.search(exclude_pattern, file_name)   for exclude_pattern in FILE_EXCLUDE_PATTERNS),
+					(re.search(exclude_pattern, folder_path) for exclude_pattern in FOLDER_EXCLUDE_PATTERNS),
+				)):
+					self.data_files.append(
+						DataFile(
+							os.path.join(folder_path, file_name)
+						)
 					)
-				)
 
 			if not self._recursive:
 				break

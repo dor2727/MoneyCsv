@@ -20,7 +20,23 @@ COPY_LAST_DATE             = "----/--/--"
 ADD_LAST_DATE              = "----/--/+1"
 SPECIAL_DATE_FORMATS       = [COPY_LAST_DATE, ADD_LAST_DATE]
 
-FILE_EXCLUDE_PATTERN = re.compile(".*\.weird\..*")
+# Files starting with '_'
+FILE_EXCLUDE_PATTERN__HIDDEN     = re.compile("^\\.")
+# Files starting with '.'
+FILE_EXCLUDE_PATTERN__UNDERSCORE = re.compile("^\\_")
+# Files having "weird" in their name
+FILE_EXCLUDE_PATTERN__WEIRD      = re.compile(".*\\.weird\\..*")
+# Files having "Vacation" in their path
+FILE_EXCLUDE_PATTERNS = [
+	FILE_EXCLUDE_PATTERN__HIDDEN,
+	FILE_EXCLUDE_PATTERN__UNDERSCORE,
+	FILE_EXCLUDE_PATTERN__WEIRD,
+]
+#
+FOLDER_EXCLUDE_PATTERN__VACATION   = re.compile("/Vacations?/?")
+FOLDER_EXCLUDE_PATTERNS = [
+	FOLDER_EXCLUDE_PATTERN__VACATION,
+]
 
 #
 # Extra details
