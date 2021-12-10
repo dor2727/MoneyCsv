@@ -7,9 +7,9 @@ from MoneyCsv.filters.filter_utils import find_string_in_string, find_string_in_
 
 # do not use this class directly - it is a meta class
 class BaseContentFilter(Filter):
-	def __init__(self, string_to_find, case_sensitive=True, regex=False):
-		self.case_sensitive = case_sensitive
-		self.regex = regex
+	def __init__(self, string_to_find, case_sensitive=None, regex=None):
+		self.case_sensitive = case_sensitive if type(case_sensitive) is bool else True
+		self.regex          = regex          if type(regex)          is bool else False
 
 		if self.case_sensitive:
 			self.string_to_find = string_to_find
