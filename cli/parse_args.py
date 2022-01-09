@@ -44,7 +44,7 @@ def parse_args(args_list=None):
 	grouping.add_argument("--friend", "--friends", action="store_true"    , dest="friend"      , help="show friend statistics")
 	grouping.add_argument("--location"           , action="store_true"    , dest="location"    , help="show location statistics")
 	#
-	grouping.add_argument("--food"               , action="store_true"    , dest="food"        , help="show youtube statistics")
+	grouping.add_argument("--food"               , action="store_true"    , dest="food"        , help="show food statistics")
 
 	details = parser.add_argument_group("details")
 	details.add_argument("--extra-details", "--extra", action="store_true",     dest="extra_details"     , help="extra details within the search filter")
