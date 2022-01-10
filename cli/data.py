@@ -123,13 +123,13 @@ def get_extra_details_text(data, time_filter, search_filter, args):
 	}
 
 	if args.extra_details_name is None:
-		g = DetailedStats_ExtraDetailGeneric(
+		g = DetailedStats_ExtraDetail(
 			search_filter,
 			data,
 			**detailedstats_params,
 		)
 	else:
-		g = DetailedStats_ExtraDetailSpecific(
+		g = DetailedStats_ExtraDetailWithName(
 			search_filter,
 			args.extra_details_name,
 			data,

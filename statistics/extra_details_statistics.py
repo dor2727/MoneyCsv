@@ -7,7 +7,7 @@ from MoneyCsv.filters import HasExtraDetailsFilter, \
 from functools import reduce
 
 # do not use this class directly - it is a meta class
-class DetailedStats_ExtraDetails(DetailedStats):
+class DetailedStats_ExtraDetails_Abstract(DetailedStats):
 	"""
 	requires:
 		self._filter_obj
@@ -38,7 +38,7 @@ class DetailedStats_ExtraDetails(DetailedStats):
 		return ExtraDetailsValueFilter(title, self._extra_details_name).get_filtered_data(self.data)
 
 # extracts `extra_details_name` automatically
-class DetailedStats_ExtraDetailGeneric(DetailedStats_ExtraDetails):
+class DetailedStats_ExtraDetail(DetailedStats_ExtraDetails_Abstract):
 	def __init__(self, search_filter, *args, **kwargs):
 		# a bit of a weird flow
 
@@ -85,7 +85,7 @@ class DetailedStats_ExtraDetailGeneric(DetailedStats_ExtraDetails):
 		return self._extra_details_name
 
 # used when `extra_details_name` is specified
-class DetailedStats_ExtraDetailSpecific(DetailedStats_ExtraDetails):
+class DetailedStats_ExtraDetailWithName(DetailedStats_ExtraDetails_Abstract):
 	def __init__(self, search_filter, extra_details_name, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
