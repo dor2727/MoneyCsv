@@ -33,7 +33,8 @@ class Stats(object):
 	@property
 	def amount_of_days(self):
 		if self.data:
-			return (self.data[-1].date - self.data[0].date).days + 1
+			dates = [i.date for i in self.data]
+			return (max(dates) - min(dates)).days + 1
 		else:
 			return 0
 
@@ -397,7 +398,7 @@ class DetailedStats(Stats):
 	@property
 	def _money_str_format(self):
 		# 4 stands for ['-', '.', and 2 digits after the dot]
-		return "%%%d.2f" % (math.ceil(math.log10(abs(max(self.data)))) + 4)
+		return "%%%d.2f" % (math.ceil(math.log10(max(map(abs, self.data)))) + 4)
 
 	def _text_generate_header(self):
 		s  = self.time_representation_str
