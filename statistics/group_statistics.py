@@ -1,4 +1,5 @@
 from MoneyCsv.statistics.base_statistics import DetailedStatsFiltered
+from MoneyCsv.statistics.description_statistics import DetailedStats_Description
 from MoneyCsv.filters import GroupFilter
 from MoneyCsv.utils import re_exact
 
@@ -43,6 +44,40 @@ class DetailedStats_Group(DetailedStatsFiltered):
 			lambda i: title == i.description_stripped,
 			self.data
 		))
+
+	def _plot_make_pie_clickable(self, fig, patches):
+		def onclick(event):
+			# Get the patch and its label
+			patch = event.artist
+			label = patch.get_label()
+
+			# Create a grouped-stats object for that label
+			try:
+				g = DetailedStats_Description(
+					self.data,
+					description_text=re_exact(label),
+					time_filter=self._time_filter,
+					grouping_method=self._grouping_method,
+					sorting_method=self._sorting_method,
+					case_sensitive=False, regex=True,
+				)
+			except ValueError as exc:
+				if exc.args == ("No possible extra_details_name found", ):
+					return
+				else:
+					raise
+
+			# Set title prefix
+			g._title_prefix = getattr(self, "_title_prefix", '') + f"{self.__class__.__name__}({self._grouping_method}) / "
+
+			print(f"=== {label} ===")
+			print(g.to_text())
+			g.to_pie(save=False)
+
+		for patch in patches:
+			patch.set_picker(True)
+
+		fig.canvas.mpl_connect('pick_event', onclick)
 
 
 class DetailedStats_Food(DetailedStats_Group):

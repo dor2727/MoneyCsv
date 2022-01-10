@@ -339,7 +339,10 @@ class DetailedStats(Stats):
 		# plotting initialization
 		fig, ax = plt.subplots()
 
-		self._plot_make_pie(ax, self.values_sorted, self.titles_sorted)
+		patches = self._plot_make_pie(ax, self.values_sorted, self.titles_sorted)
+
+		if hasattr(self, "_plot_make_pie_clickable"):
+			self._plot_make_pie_clickable(fig, patches)
 
 		self._plot_set_title(fig, ax)
 
