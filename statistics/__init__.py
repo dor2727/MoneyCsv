@@ -7,3 +7,4 @@ from MoneyCsv.statistics.extra_details_statistics import DetailedStats_ExtraDeta
 														 DetailedStats_ExtraDetailWithName
 from MoneyCsv.statistics.group_statistics         import DetailedStats_Group, \
 														 DetailedStats_Food
+from MoneyCsv.statistics.description_statistics   import DetailedStats_Description
