@@ -215,7 +215,6 @@ class DetailedStats(Stats):
 			raise ValueError("invalid sorting_method")
 
 		# unpack the zip into titles and values
-		t, v = list(zip(*sorted_z))
 		t, v = tuple(zip(*sorted_z))
 
 		if exclude_salary and "Salary" in t:
