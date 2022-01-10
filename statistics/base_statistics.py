@@ -258,7 +258,13 @@ class DetailedStats(Stats):
 		return getattr(
 			self,
 			"_title",
-			f"{self.__class__.__name__}({self._grouping_method}) - {self.selected_time}"
+			(
+				f"{getattr(self, '_title_prefix', '')}"
+				f"{self.__class__.__name__}"
+				f"({self._grouping_method})"
+				 " - "
+				f"{self.selected_time}"
+			)
 		)
 
 	@title.setter
