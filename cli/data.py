@@ -3,8 +3,7 @@ import os
 from MoneyCsv.statistics import *
 from MoneyCsv.utils import print_items, re_exact
 from MoneyCsv.parsing import DataFolder, DataFile
-from MoneyCsv.filters import TimeFilter_None, \
-							 initialize_time_filter, initialize_search_filter
+from MoneyCsv.filters import initialize_time_filter, initialize_search_filter
 
 # Find the relative file path (it may be a relative path)
 def open_data_file(data_object=None, file_path=None):

@@ -1,4 +1,3 @@
-import re
 import operator
 
 from MoneyCsv.filters.base_filters import Filter

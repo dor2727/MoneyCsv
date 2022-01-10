@@ -1,9 +1,6 @@
-import os
-import csv
 import datetime
 
 from MoneyCsv.parsing.consts import *
-from MoneyCsv.parsing.parse_exception import ParseError
 
 
 class DataItemParser(object):

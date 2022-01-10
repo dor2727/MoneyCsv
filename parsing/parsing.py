@@ -7,7 +7,6 @@ from MoneyCsv.utils import *
 from MoneyCsv.parsing.consts import *
 from MoneyCsv.parsing.dataitem_parser     import DataItemParser
 from MoneyCsv.parsing.description_details import DETAIL_PARSERS
-from MoneyCsv.parsing.parse_exception     import ParseError
 
 
 class DataItem(DataItemParser):

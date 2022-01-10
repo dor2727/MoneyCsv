@@ -1,8 +1,7 @@
 import calendar
 import datetime
 
-from MoneyCsv.utils import get_midnight, get_ymd_tuple, format_dates
-from MoneyCsv.consts import DATE_REPRESENTATION_PATTERN
+from MoneyCsv.utils import get_midnight, format_dates
 from MoneyCsv.filters.base_filters import Filter, TrueFilter
 
 # do not use this class directly - it is a meta class

@@ -2,9 +2,7 @@ from MoneyCsv.statistics.base_statistics import DetailedStats
 from MoneyCsv.filters import HasExtraDetailsFilter, \
 							ExtraDetailsFilter, \
 							ExtraDetailsValueFilter, \
-							DescriptionFilter, \
-							GroupFilter
-from MoneyCsv.utils import re_exact
+							DescriptionFilter
 
 # do not use this class directly - it is a meta class
 class DetailedStats_ExtraDetails(DetailedStats):

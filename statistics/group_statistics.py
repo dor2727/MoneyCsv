@@ -1,5 +1,3 @@
-import re
-
 from MoneyCsv.statistics.base_statistics import DetailedStatsFiltered
 from MoneyCsv.filters import GroupFilter
 from MoneyCsv.utils import re_exact
