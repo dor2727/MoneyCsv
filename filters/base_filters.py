@@ -12,7 +12,8 @@ class Filter(object):
 	def get_filtered_data(self, data):
 		return list(itertools.compress(data, self.filter(data)))
 
-	def get_selected_time(self):
+	@property
+	def selected_time(self):
 		return getattr(self, "_selected_time", DEFAULT_SELECTED_TIME)
 
 	def __mod__(self, other):

@@ -71,7 +71,7 @@ class Stats(object):
 		if self._time_filter is None:
 			return "All time"
 
-		return self._time_filter.get_selected_time()
+		return self._time_filter.selected_time
 
 	@property
 	def date_representation(self):

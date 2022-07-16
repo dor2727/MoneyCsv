@@ -206,7 +206,7 @@ class TelegramCommands(object):
 	def filtered_time_command(self, f, update=None):
 		g = GroupedStats_Subject(
 			f % self.datafiles.data,
-			selected_time=f.get_selected_time(),
+			selected_time=f.selected_time,
 			group_value="money"
 		)
 
@@ -276,7 +276,7 @@ class TelegramCommands(object):
 	def pie_command(self, g_cls, f, update=None):
 		g = g_cls(
 			f % self.datafiles.data,
-			selected_time=f.get_selected_time(),
+			selected_time=f.selected_time,
 			group_value="money"
 		)
 
