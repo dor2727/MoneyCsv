@@ -17,8 +17,8 @@ class DetailedStats_AllGroups(DetailedStats):
 		self._titles = sorted(titles)
 		return self._titles
 
-	def _get_items_of_title(self, title):
-		return GroupFilter(re_exact(title), case_sensitive=True, regex=True).get_filtered_data(self.data)
+	def _get_filter_of_title(self, title):
+		return GroupFilter(re_exact(title), case_sensitive=True, regex=True)
 
 	def _plot_make_pie_clickable(self, fig, patches):
 		def onclick(event):
@@ -61,8 +61,8 @@ class DetailedStats_Friend(DetailedStats):
 		self._titles = sorted(titles)
 		return self._titles
 
-	def _get_items_of_title(self, title):
-		return FriendFilter(title).get_filtered_data(self.data)
+	def _get_filter_of_title(self, title):
+		return FriendFilter(title)
 
 class DetailedStats_Location(DetailedStats):
 	def _get_titles(self):
@@ -78,5 +78,5 @@ class DetailedStats_Location(DetailedStats):
 		self._titles = sorted(titles)
 		return self._titles
 
-	def _get_items_of_title(self, title):
-		return LocationFilter(title).get_filtered_data(self.data)
+	def _get_filter_of_title(self, title):
+		return LocationFilter(title)

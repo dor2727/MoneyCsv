@@ -184,7 +184,10 @@ class DetailedStats(Stats):
 		raise NotImplemented
 
 	def _get_items_of_title(self, title):
-		raise NotImplemented
+		if hasattr(self, "_get_filter_of_title") and callable(self._get_filter_of_title):
+			return self._get_filter_of_title(title).get_filtered_data(self.data)
+
+		raise NotImplementedError
 
 
 	#

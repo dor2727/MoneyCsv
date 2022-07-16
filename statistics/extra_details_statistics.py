@@ -34,8 +34,8 @@ class DetailedStats_ExtraDetails_Abstract(DetailedStats):
 		self._titles = sorted(titles)
 		return self._titles
 
-	def _get_items_of_title(self, title):
-		return ExtraDetailsValueFilter(title, self._extra_details_name).get_filtered_data(self.data)
+	def _get_filter_of_title(self, title):
+		return ExtraDetailsValueFilter(title, self._extra_details_name)
 
 # extracts `extra_details_name` automatically
 class DetailedStats_ExtraDetail(DetailedStats_ExtraDetails_Abstract):
