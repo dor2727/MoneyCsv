@@ -6,11 +6,8 @@ from MoneyCsv.filters.base_filters import Filter, TrueFilter
 
 # do not use this class directly - it is a meta class
 class BaseTimeFilter(Filter):
-	def filter(self, data):
-		return [
-			i.is_in_date_range(self.start_time, self.stop_time)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return item.is_in_date_range(self.start_time, self.stop_time)
 
 	def __str__(self):
 		return format_dates(self.start_time, self.stop_time)
@@ -124,13 +121,12 @@ class TimeFilter_Month(BaseTimeFilter):
 		self.stop_time  = datetime.datetime(self.year, self.month,
 			calendar.monthrange(self.year, self.month)[1])
 
-	def filter(self, data):
-		return [
-			i.date.year == self.year
+	def _filter_single_item(self, item):
+		return (
+			item.date.year == self.year
 			 and
-			i.date.month == self.month
-			for i in data
-		]
+			item.date.month == self.month
+		)
 
 	def __repr__(self):
 		return f"{self.__class__.__name__}({self.year}/{self.month})"
@@ -146,11 +142,9 @@ class TimeFilter_Year(BaseTimeFilter):
 		self.start_time = datetime.datetime(self.year, 1,  1 )
 		self.stop_time  = datetime.datetime(self.year, 12, 31)
 
-	def filter(self, data):
-		return [
-			i.date.year == self.year
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return item.date.year == self.year
+
 
 	def __repr__(self):
 		return f"{self.__class__.__name__}({self.year})"
@@ -174,12 +168,13 @@ class TimeFilter_DateRange(BaseTimeFilter):
 		self.include_by_start = include_by_start
 		self.include_by_stop  = include_by_stop
 
-	def filter(self, data):
-		return [
-			i.is_in_date_range(self.start_time, self.stop_time,
-				self.include_by_start, self.include_by_stop)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return item.is_in_date_range(
+			self.start_time,
+			self.stop_time,
+			self.include_by_start,
+			self.include_by_stop
+		)
 
 	@property
 	def _selected_time(self):

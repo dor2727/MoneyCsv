@@ -18,20 +18,23 @@ class BaseContentFilter(Filter):
 	def __repr__(self):
 		return f"{self.__class__.__name__}({self.string_to_find})"
 
-	def filter(self, data):
-		raise NotImplemented
+	def _find_string_in_string(self, string_to_search_in, string_to_find=None):
+		if string_to_find is None:
+			string_to_find = self.string_to_find
 
-	def _find_string_in_string(self, string_to_search_in):
 		return find_string_in_string(
-			self.string_to_find,
+			string_to_find,
 			string_to_search_in,
 			self.regex,
 			self.case_sensitive
 		)
 
-	def _find_string_in_list(self, list_to_search_in):
+	def _find_string_in_list(self, list_to_search_in, string_to_find=None):
+		if string_to_find is None:
+			string_to_find = self.string_to_find
+
 		return find_string_in_list(
-			self.string_to_find,
+			string_to_find,
 			list_to_search_in,
 			self.regex,
 			self.case_sensitive
@@ -39,72 +42,49 @@ class BaseContentFilter(Filter):
 
 
 class DescriptionFilter(BaseContentFilter):
-	def filter(self, data):
-		return [
-			self._find_string_in_string(i.description)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return self._find_string_in_string(item.description)
 
 class GroupFilter(BaseContentFilter):
-	def filter(self, data):
-		return [
-			self._find_string_in_string(i.group)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return self._find_string_in_string(item.group)
 
 class FriendFilter(BaseContentFilter):
-	def filter(self, data):
-		return [
-			self._find_string_in_list(i.friends)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return self._find_string_in_list(item.friends)
 
 class CurrencyFilter(BaseContentFilter):
-	def filter(self, data):
-		return [
-			i.currency == self.string_to_find
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return item.currency == self.string_to_find
 
 # Filters whether there is a location set
 class HasLocationFilter(Filter):
-	def filter(self, data):
-		return [
-			bool(i.location)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return bool(item.location)
 
 class LocationFilter(BaseContentFilter):
-	def filter(self, data):
-		return [
-			(
-				bool(i.location)
-				and
-				self._find_string_in_string(i.location)
-			)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return (
+			bool(item.location)
+			and
+			self._find_string_in_string(item.location)
+		)
 
 
 # Filters whether there are extra_details in the DataItem
 class HasExtraDetailsFilter(Filter):
-	def filter(self, data):
-		return [
-			bool(i.extra_details)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return bool(item.extra_details)
 
 # Filters whether there is a specific extra_details key in the DataItem
 class ExtraDetailsFilter(BaseContentFilter):
-	def filter(self, data):
-		return [
-			(
-				bool(i.extra_details)
-				and
-				self._find_string_in_list(list(i.extra_details.keys()))
-			)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return (
+			bool(item.extra_details)
+			and
+			# `item.extra_details` is a dict, but it can both be iterated over and has `in`
+			self._find_string_in_list(item.extra_details)
+		)
 
 # Filters whether there is a specific extra_details value to a certain key in the DataItem
 class ExtraDetailsValueFilter(BaseContentFilter):
@@ -116,24 +96,20 @@ class ExtraDetailsValueFilter(BaseContentFilter):
 		else:
 			self.extra_details_name = extra_details_name.lower()
 
-	def filter(self, data):
-		return [
-			(
-				bool(i.extra_details)
-				and
-				find_string_in_list(
-					self.extra_details_name, # string to find
-					list(i.extra_details.keys()), #list_to_search_in
-					self.regex,
-					self.case_sensitive
-				)
-				and
-				self._find_string_in_list(i.extra_details[self.extra_details_name])
-			)
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return (
+			bool(item.extra_details)
+			and
+			self._find_string_in_list(item.extra_details, self.extra_details_name)
+			and
+			self._find_string_in_list(item.extra_details[self.extra_details_name])
+		)
 
 
+_OPERATOR_MAP = {
+	"maximum": operator.ge,
+	"minimum": operator.le,
+}
 class AmountFilter(Filter):
 	def __init__(self, string, absolute_value=True):
 		self.absolute_value = absolute_value
@@ -148,26 +124,21 @@ class AmountFilter(Filter):
 			self._action = "maximum"
 			self.amount = self._float(string)
 
+		try:
+			self._operator = _OPERATOR_MAP[self._action]
+		except KeyError as exc:
+			allowed_operations = ", ".join(map("\"{}\"",format, _OPERATOR_MAP))
+			raise ValueError(f"invalid operation! please use either {allowed_operations}") from exc
+
+
 	def _float(self, value):
 		if self.absolute_value:
 			return abs(float(value))
 		else:
 			return float(value)
 
-	@property
-	def _operator(self):
-		if self._action == "maximum":
-			return operator.ge
-		elif self._action == "minimum":
-			return operator.le
-		else:
-			raise ValueError(f"Invalid action ({self._action})")
-
-	def filter(self, data):
-		return [
-			self._operator(self.amount, float(i))
-			for i in data
-		]
+	def _filter_single_item(self, item):
+		return self._operator(self.seconds, float(item))
 
 	def __repr__(self):
 		return f"{self.__class__.__name__}({self._action} {self.amount} amount)"
