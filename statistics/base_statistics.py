@@ -400,7 +400,7 @@ class DetailedStats(Stats):
 
 	@property
 	def _money_str_format(self):
-		# 4 stands for ['-', '.', and 2 digits after the dot]
+		# 4 stands for ['-', '.', 2 digits after the dot, 'nis']
 		return "%%%d.2f" % (math.ceil(math.log10(max(map(abs, self.data)))) + 4)
 
 	def _text_generate_header(self):

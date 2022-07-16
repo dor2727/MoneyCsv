@@ -147,8 +147,8 @@ class DataItemParser(object):
 		else:
 			return self.date.strftime("%Y/%m/%d")
 	def _format_amount(self):
-		# 4 digit . 2 digit
-		return f"{self.amount:7.2f}"
+		# 5 digit . 2 digit
+		return f"{self.amount:8.2f}"
 	def _format_currency(self):
 		return self.currency_symbol
 	def _format_group(self):
