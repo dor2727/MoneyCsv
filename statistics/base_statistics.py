@@ -108,7 +108,6 @@ class Stats(object):
 
 		headers = [i[0] for i in items]
 		values = [i[1] for i in items]
-		headers, values = self.get_stats_list()
 		return ','.join(headers) + '\n' + ','.join(values)
 
 	def to_json(self):
