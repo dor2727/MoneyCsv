@@ -7,7 +7,10 @@ from MoneyCsv.parsing import DataItem
 
 class Filter(object):
 	def filter(self, data):
-		raise NotImplemented
+		if hasattr(self, "_filter_single_item") and callable(self._filter_single_item):
+			return map(self._filter_single_item, data)
+
+		raise NotImplementedError
 
 	def get_filtered_data(self, data):
 		return list(itertools.compress(data, self.filter(data)))
