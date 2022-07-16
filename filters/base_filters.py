@@ -40,6 +40,9 @@ class Filter(object):
 	def __and__(self, other):
 		return MultiFilter(self, other, "and")
 
+	def __xor__(self, other):
+		return MultiFilter(self, other, "xor")
+
 	def __or__(self, other):
 		return MultiFilter(self, other, "or")
 
