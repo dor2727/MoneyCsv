@@ -36,8 +36,7 @@ class TimeFilter_None(TrueFilter):
 		return "All time"
 
 	def __repr__(self):
-		name  = self.__class__.__name__
-		return f"{name}(All time)"
+		return f"{self.__class__.__name__}(All time)"
 
 	@property
 	def _selected_time(self):

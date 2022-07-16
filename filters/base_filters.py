@@ -82,7 +82,7 @@ class MultiFilter(Filter):
 		)
 
 	def __repr__(self):
-		return f"({self.filter_1.__repr__()}) {self.operation} ({self.filter_2.__repr__()})"
+		return f"({repr(self.filter_1)}) {self.operation} ({repr(self.filter_2)})"
 
 	@property
 	def _selected_time(self):

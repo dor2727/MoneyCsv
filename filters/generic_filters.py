@@ -15,11 +15,11 @@ class StrFilter(Filter):
 			case_sensitive=case_sensitive, regex=regex
 		)
 
+		self._multi = self._group | self._description
+
 		self.string = string
 		self.case_sensitive = case_sensitive
 		self.regex = regex
-
-		self._multi = self._group | self._description
 
 	def filter(self, data):
 		return self._multi.filter(data)
