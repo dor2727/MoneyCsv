@@ -101,6 +101,8 @@ def get_special_text(data, time_filter, args):
 			"case_sensitive": False,
 			"regex": True,
 		}
+	elif args.all_groups:
+		cls = DetailedStats_AllGroups
 
 	else: # default statistics
 		cls = DetailedStats_AllGroups

@@ -40,6 +40,7 @@ def parse_args(args_list=None):
 	debugging.add_argument("--pdb"  , action="store_true")
 
 	grouping = parser.add_argument_group("grouping")
+	grouping.add_argument("--all-groups", "--all", action="store_true"    , dest="all_groups"  , help="show statistics of all groups")
 	grouping.add_argument("--group"              , type=str , default=None, dest="group"       , help="show statistics per group")
 	grouping.add_argument("--friend", "--friends", action="store_true"    , dest="friend"      , help="show friend statistics")
 	grouping.add_argument("--location"           , action="store_true"    , dest="location"    , help="show location statistics")
