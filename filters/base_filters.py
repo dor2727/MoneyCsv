@@ -56,6 +56,11 @@ class Filter(object):
 	def __repr__(self):
 		return self.__class__.__name__
 
+_OPERATOR_MAP = {
+	"and": operator.and_,
+	"or": operator.or_,
+	"xor": operator.xor,
+}
 class MultiFilter(Filter):
 	"""docstring for MultiFilter"""
 	def __init__(self, filter_1, filter_2, operation):
@@ -63,14 +68,11 @@ class MultiFilter(Filter):
 		self.filter_2 = filter_2
 
 		self.operation = operation
-		if operation.lower() == "and":
-			self.operator = operator.and_
-		elif operation.lower() == "or":
-			self.operator = operator.or_
-		elif operation.lower() == "xor":
-			self.operator = operator.xor
-		else:
-			raise ValueError("invalid operation! please use either \"and\", \"or\", or \"xor\"")
+		try:
+			self.operator = _OPERATOR_MAP[operation.lower()]
+		except KeyError as exc:
+			allowed_operations = ", ".join(map("\"{}\"",format, _OPERATOR_MAP))
+			raise ValueError(f"invalid operation! please use either {allowed_operations}") from exc
 
 	def filter(self, data):
 		return map(
