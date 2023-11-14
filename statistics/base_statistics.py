@@ -137,11 +137,11 @@ class BasicStats(Stats):
 
 		s += "\n"
 		s += f"  transactions per day = {self.transactions_per_day:.2f}"
-		s += " ; "
+		s += " │ "
 		s += f"  money per day = {self.money_per_day:.2f}"
 
 		s += "\n"
-		s += "    (%3d) : %.2f%s ; transaction average %.2f%s" % (
+		s += "    (%3d) : %.2f%s │ transaction average %.2f%s" % (
 			self.amount_of_transactions,
 			self.amount_of_money,
 			CURRENCY_SYMBOL_NIS,
@@ -416,7 +416,7 @@ class DetailedStats(Stats):
 		s  = self.time_representation_str
 		s += "\n"
 		s += f"  transactions per day = {self.transactions_per_day:.2f}"
-		s += " ; "
+		s += " │ "
 		s += f"  money per day = {self.money_per_day:.2f}"
 		return s
 
@@ -445,7 +445,7 @@ class DetailedStats(Stats):
 
 		money_percentage = abs(amount_of_money / self.amount_of_money * 100.0)
 
-		return "    %s (%4d) : %s (%5.2f%%) ; item average %s" % (
+		return "    %s (%4d) : %s (%5.2f%%) │ item average %s" % (
 			(self._text_title_format % title),
 			amount_of_transactions,
 			(self._money_str_format % amount_of_money),

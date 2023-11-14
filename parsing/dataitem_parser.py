@@ -96,6 +96,9 @@ class DataItemParser(object):
 		self.description = s
 		return s
 
+	def _parser_amount_nis(self, s):
+		self.amount_nis = float(s)
+		return self.amount_nis
 	def _parser_prediscount_amount(self, s):
 		self.prediscount_amount = float(s)
 		return self.prediscount_amount
@@ -121,6 +124,7 @@ class DataItemParser(object):
 			"Group": self._parser_group,
 			"Description": self._parser_description,
 			"PreDiscount_Amount": self._parser_prediscount_amount,
+			"Amountnis": self._parser_amount_nis,
 			"Payment": self._parser_payment,
 			"Amount_Converted": self._parser_amount_converted,
 			"Frequency": self._parser_frequency,
